@@ -7,10 +7,11 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, View
 from django.shortcuts import redirect
 from django.utils import timezone
+from sweetify import sweetify
+
 from .forms import CheckoutForm, CouponForm, RefundForm
 from .models import Item, OrderItem, Order, BillingAddress, Payment, Coupon, Refund, Category
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
 
 # Create your views here.
 import random
@@ -34,8 +35,8 @@ class PaymentView(View):
             }
             return render(self.request, "payment.html", context)
         else:
-            messages.warning(
-                self.request, "u have not added a billing address")
+            sweetify.warning(
+                self.request, "Você não adicionou um endereço")
             return redirect("core:checkout")
 
     def post(self, *args, **kwargs):
@@ -62,46 +63,46 @@ class PaymentView(View):
             order.ref_code = create_ref_code()
             order.save()
 
-            messages.success(self.request, "Order was successful")
+            sweetify.success(self.request, "Pedido concluído")
             return redirect("/")
 
         except stripe.error.CardError as e:
             # Since it's a decline, stripe.error.CardError will be caught
             body = e.json_body
             err = body.get('error', {})
-            messages.error(self.request, f"{err.get('message')}")
+            sweetify.error(self.request, f"{err.get('message')}")
             return redirect("/")
 
         except stripe.error.RateLimitError as e:
             # Too many requests made to the API too quickly
-            messages.error(self.request, "RateLimitError")
+            sweetify.error(self.request, "Erro de limite de taxa")
             return redirect("/")
 
         except stripe.error.InvalidRequestError as e:
             # Invalid parameters were supplied to Stripe's API
-            messages.error(self.request, "Invalid parameters")
+            sweetify.error(self.request, "Parâmetros inválidos")
             return redirect("/")
 
         except stripe.error.AuthenticationError as e:
             # Authentication with Stripe's API failed
             # (maybe you changed API keys recently)
-            messages.error(self.request, "Not Authentication")
+            sweetify.error(self.request, "Não autenticado")
             return redirect("/")
 
         except stripe.error.APIConnectionError as e:
             # Network communication with Stripe failed
-            messages.error(self.request, "Network Error")
+            sweetify.error(self.request, "Falha na rede!")
             return redirect("/")
 
         except stripe.error.StripeError as e:
             # Display a very generic error to the user, and maybe send
             # yourself an email
-            messages.error(self.request, "Something went wrong")
+            sweetify.error(self.request, "Algo deu errado! Informe o suporte!")
             return redirect("/")
 
         except Exception as e:
             # send an email to ourselves
-            messages.error(self.request, "Serious Error occured")
+            sweetify.error(self.request, "Algo deu muito errado! Informe o suporte!")
             return redirect("/")
 
 
@@ -120,7 +121,7 @@ class OrderSummaryView(LoginRequiredMixin, View):
             }
             return render(self.request, 'order_summary.html', context)
         except ObjectDoesNotExist:
-            messages.error(self.request, "You do not have an active order")
+            sweetify.error(self.request, "Não há itens no carrinho")
             return redirect("/")
 
 
@@ -166,7 +167,7 @@ class CheckoutView(View):
             return render(self.request, "checkout.html", context)
 
         except ObjectDoesNotExist:
-            messages.info(self.request, "You do not have an active order")
+            sweetify.info(self.request, "Você não tem um pedido ativo")
             return redirect("core:checkout")
 
     def post(self, *args, **kwargs):
@@ -202,11 +203,11 @@ class CheckoutView(View):
                 elif payment_option == 'P':
                     return redirect('core:payment', payment_option='paypal')
                 else:
-                    messages.warning(
+                    sweetify.warning(
                         self.request, "Invalid payment option select")
                     return redirect('core:checkout')
         except ObjectDoesNotExist:
-            messages.error(self.request, "You do not have an active order")
+            sweetify.error(self.request, "You do not have an active order")
             return redirect("core:order-summary")
 
 
@@ -245,18 +246,18 @@ def add_to_cart(request, slug):
         if order.items.filter(item__slug=item.slug).exists():
             order_item.quantity += 1
             order_item.save()
-            messages.info(request, "Item qty was updated.")
+            sweetify.info(request, "Item qty was updated.")
             return redirect("core:order-summary")
         else:
             order.items.add(order_item)
-            messages.info(request, "Item was added to your cart.")
+            sweetify.info(request, "Item was added to your cart.")
             return redirect("core:order-summary")
     else:
         ordered_date = timezone.now()
         order = Order.objects.create(
             user=request.user, ordered_date=ordered_date)
         order.items.add(order_item)
-        messages.info(request, "Item was added to your cart.")
+        sweetify.info(request, "Item was added to your cart.")
     return redirect("core:order-summary")
 
 
@@ -276,15 +277,15 @@ def remove_from_cart(request, slug):
                 ordered=False
             )[0]
             order.items.remove(order_item)
-            messages.info(request, "Item was removed from your cart.")
+            sweetify.info(request, "Item was removed from your cart.")
             return redirect("core:order-summary")
         else:
             # add a message saying the user dosent have an order
-            messages.info(request, "Item was not in your cart.")
+            sweetify.info(request, "Item was not in your cart.")
             return redirect("core:product", slug=slug)
     else:
         # add a message saying the user dosent have an order
-        messages.info(request, "u don't have an active order.")
+        sweetify.info(request, "u don't have an active order.")
         return redirect("core:product", slug=slug)
     return redirect("core:product", slug=slug)
 
@@ -309,15 +310,15 @@ def remove_single_item_from_cart(request, slug):
                 order_item.save()
             else:
                 order.items.remove(order_item)
-            messages.info(request, "This item qty was updated.")
+            sweetify.info(request, "This item qty was updated.")
             return redirect("core:order-summary")
         else:
             # add a message saying the user dosent have an order
-            messages.info(request, "Item was not in your cart.")
+            sweetify.info(request, "Item was not in your cart.")
             return redirect("core:product", slug=slug)
     else:
         # add a message saying the user dosent have an order
-        messages.info(request, "u don't have an active order.")
+        sweetify.info(request, "u don't have an active order.")
         return redirect("core:product", slug=slug)
     return redirect("core:product", slug=slug)
 
@@ -327,7 +328,7 @@ def get_coupon(request, code):
         coupon = Coupon.objects.get(code=code)
         return coupon
     except ObjectDoesNotExist:
-        messages.info(request, "This coupon does not exist")
+        sweetify.info(request, "This coupon does not exist")
         return redirect("core:checkout")
 
 
@@ -341,11 +342,11 @@ class AddCouponView(View):
                     user=self.request.user, ordered=False)
                 order.coupon = get_coupon(self.request, code)
                 order.save()
-                messages.success(self.request, "Successfully added coupon")
+                sweetify.success(self.request, "Successfully added coupon")
                 return redirect("core:checkout")
 
             except ObjectDoesNotExist:
-                messages.info(request, "You do not have an active order")
+                sweetify.info(self.request, "You do not have an active order")
                 return redirect("core:checkout")
 
 
@@ -376,9 +377,9 @@ class RequestRefundView(View):
                 refund.email = email
                 refund.save()
 
-                messages.info(self.request, "Your request was received")
+                sweetify.info(self.request, "Your request was received")
                 return redirect("core:request-refund")
 
             except ObjectDoesNotExist:
-                messages.info(self.request, "This order does not exist")
+                sweetify.info(self.request, "This order does not exist")
                 return redirect("core:request-refund")

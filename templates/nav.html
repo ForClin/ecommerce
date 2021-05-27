@@ -25,12 +25,12 @@
 				</div>
 
 				<span class="topbar-child1">
-					Free shipping for standard order over $100
+					Frete grátis a partir de $100
 				</span>
 
 				<div class="topbar-child2">
 					<span class="topbar-email">
-						<a href="https://github.com/zinmyoswe">
+						<a href="#">
 						overmidnight12@gmail.com
 					    </a>
 					</span>
@@ -47,7 +47,7 @@
 			<div class="wrap_header">
 				<!-- Logo -->
 				<a href="/" class="logo">
-					<p style="color: black; "><b style="font-size: 22px;">D</b>JANGO SHOP</p>
+                    <img src="{% static "images/logo-Portuguese.png" %}"  style="width: auto; height: 50px;" alt="">
 				</a>
 
 				<!-- Menu -->
@@ -55,29 +55,29 @@
 					<nav class="menu">
 						<ul class="main_menu">
 							<li>
-								<a href="/">Home</a>
+								<a href="/">INICIO</a>
 
 							</li>
 
-							<li>
-								<a href="/shop/">Shop</a>
-							</li>
+{#							<li>#}
+{#								<a href="/shop/">SHOP</a>#}
+{#							</li>#}
 
 							{% categories %}
 
 							{% if request.user.is_authenticated %}
 							<li>
-								<a href="{% url 'core:order-summary' %}">Cart<span class="badge badge-dark">{{ request.user|cart_item_count }}</span></a>
+								<a href="{% url 'core:order-summary' %}">CARRINHO <span class="badge badge-dark">{{ request.user|cart_item_count }}</span></a>
 							</li>
 							<li>
-								<a href="{% url 'account_logout' %}">Logout</a>
+								<a href="{% url 'account_logout' %}">SAIR</a>
 							</li>
 							{% else %}
 							<li>
-								<a href="#">Login</a>
+								<a href="#">ENTRAR</a>
 								<ul class="sub_menu">
-									<li><a href="{% url 'account_login' %}">Login</a></li>
-									<li><a href="{% url 'account_signup' %}">SignUp</a></li>
+									<li><a href="{% url 'account_login' %}">ENTRAR</a></li>
+									<li><a href="{% url 'account_signup' %}">CADASTRAR</a></li>
 								</ul>
 							</li>
 							{% endif %}
@@ -107,7 +107,7 @@
 
 									<div class="header-cart-item-txt">
 										<a href="#" class="header-cart-item-name">
-											White Shirt With Pleat Detail Back
+											Camisa Branca com Detalhe de Pregas nas Costas
 										</a>
 
 										<span class="header-cart-item-info">
@@ -156,15 +156,15 @@
 							<div class="header-cart-buttons">
 								<div class="header-cart-wrapbtn">
 									<!-- Button -->
-									<a href="cart.html" class="flex-c-m size1 bg1 bo-rad-20 hov1 s-text1 trans-0-4">
-										View Cart
+									<a href="{% url 'core:order-summary' %}" class="flex-c-m size1 bg1 bo-rad-20 hov1 s-text1 trans-0-4">
+										Ver Carrinho
 									</a>
 								</div>
 
 								<div class="header-cart-wrapbtn">
 									<!-- Button -->
-									<a href="#" class="flex-c-m size1 bg1 bo-rad-20 hov1 s-text1 trans-0-4">
-										Check Out
+									<a href="{% url 'core:checkout' %}" class="flex-c-m size1 bg1 bo-rad-20 hov1 s-text1 trans-0-4">
+										Finalizar
 									</a>
 								</div>
 							</div>

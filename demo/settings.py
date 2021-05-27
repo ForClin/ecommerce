@@ -8,6 +8,8 @@ SECRET_KEY = '-05sgp9!deq=q1nltm@^^2cc+v29i(tyybv3v2t77qi66czazj'
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
+    'adminlte3',
+    'adminlte3_theme',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -21,7 +23,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'crispy_forms',
     'django_countries',
-    'core'
+    'core',
+    'sweetify',
+
 ]
 
 MIDDLEWARE = [
@@ -52,8 +56,8 @@ TEMPLATES = [
     },
 ]
 
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'pt-BR'
+TIME_ZONE = 'Europe/Lisbon'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -101,8 +105,8 @@ SOCIALACCOUNT_PROVIDERS = {
         # (``socialaccount`` app) containing the required client
         # credentials, or list them here:
         'APP': {
-            'client_id': '123',
-            'secret': '456',
+            'client_id': '306607164325-mkopk8foev3qr62ko5a19eqfsi06j20n.apps.googleusercontent.com',
+            'secret': 'VxCfn2TsxU5Z7KS_G3LfVA92',
             'key': '666'
         }
     }
@@ -112,5 +116,7 @@ SOCIALACCOUNT_PROVIDERS = {
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-STRIPE_PUBLIC_KEY = 'pk_test_lX3r6OMjOU2yzFsNSHq6belT00EY82kZmH'
-STRIPE_SECRET_KEY = 'sk_test_tn0CTDaIJHUJyAqhsf39cfsC00LNjsqDnb'
+STRIPE_PUBLIC_KEY = 'pk_test_51IvakGGCfDhRtPczIe9ndyl1rj8VZSqcsQ3E4SHwEXX05DZfxeF5GtU6wgFKC6HbIufSVYsKXzBkgWWCQK7EHJMR00ykYJ9NyL'
+STRIPE_SECRET_KEY = 'sk_test_51IvakGGCfDhRtPczREk5dOhpLoXfGBDL1UM1QtZU9qkkEKFAhGXe19jxYHIxAn4FAhRmEPi6ju24A3R1QTkgQWIf00wTtER7zO'
+
+SWEETIFY_SWEETALERT_LIBRARY = 'sweetalert'
