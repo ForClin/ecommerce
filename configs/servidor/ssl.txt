@@ -1,0 +1,32 @@
+https://medium.com/@luciohenrique/realizando-o-deploy-com-python-django-virtualenv-gunicorn-systemd-nginx-https-221a1424763d
+https://certbot.eff.org/lets-encrypt/ubuntubionic-nginx
+
+
+1-  SSH no servidor
+*****SSH no servidor executando o site HTTP como um usuário com privilégios sudo.
+
+2-Adicionar PPA Certbot
+****Você precisará adicionar o Certbot PPA à sua lista de repositórios. Para fazer isso, execute os seguintes comandos na linha de comando na máquina:
+
+sudo apt-get update
+sudo apt-get install software-properties-common
+sudo add-apt-repository universe
+sudo add-apt-repository ppa:certbot/certbot
+sudo apt-get update
+
+3-Instale o Certbot
+Execute este comando na linha de comandos da máquina para instalar o Certbot.
+
+sudo apt-get install certbot python-certbot-nginx
+
+
+4- Escolha como você deseja executar o Certbot
+    Obtenha e instale seus certificados ...
+    Execute este comando para obter um certificado e solicite ao Certbot que edite sua configuração do Nginx automaticamente para atendê-la, ativando o acesso HTTPS em uma única etapa.
+
+sudo certbot --nginx
+
+5- Testar renovação automática
+    Os pacotes Certbot no seu sistema vêm com uma tarefa cron ou timer do systemd que renovará seus certificados automaticamente antes que eles expirem. Você não precisará executar o Certbot novamente, a menos que altere sua configuração. Você pode testar a renovação automática de seus certificados executando este comando:
+
+sudo certbot renew --dry-run
