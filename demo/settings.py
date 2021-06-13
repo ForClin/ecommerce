@@ -120,3 +120,9 @@ STRIPE_PUBLIC_KEY = 'pk_test_51IvakGGCfDhRtPczIe9ndyl1rj8VZSqcsQ3E4SHwEXX05DZfxe
 STRIPE_SECRET_KEY = 'sk_test_51IvakGGCfDhRtPczREk5dOhpLoXfGBDL1UM1QtZU9qkkEKFAhGXe19jxYHIxAn4FAhRmEPi6ju24A3R1QTkgQWIf00wTtER7zO'
 
 SWEETIFY_SWEETALERT_LIBRARY = 'sweetalert'
+
+
+try:
+    from .productions import *
+except:
+    pass
