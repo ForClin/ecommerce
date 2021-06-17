@@ -10,7 +10,7 @@ from django.utils import timezone
 from sweetify import sweetify
 
 from .forms import CheckoutForm, CouponForm, RefundForm
-from .models import Item, OrderItem, Order, BillingAddress, Payment, Coupon, Refund, Category
+from .models import ItemStock, OrderItem, Order, BillingAddress, Payment, Coupon, Refund, Category
 from django.http import HttpResponseRedirect
 
 # Create your views here.
@@ -108,7 +108,7 @@ class PaymentView(View):
 
 class HomeView(ListView):
     template_name = "index.html"
-    queryset = Item.objects.filter(is_active=True)
+    queryset = ItemStock.objects.filter(is_active=True)
     context_object_name = 'items'
 
 
@@ -126,14 +126,21 @@ class OrderSummaryView(LoginRequiredMixin, View):
 
 
 class ShopView(ListView):
-    model = Item
+    model = ItemStock
     paginate_by = 6
     template_name = "shop.html"
 
 
 class ItemDetailView(DetailView):
-    model = Item
+    model = ItemStock
     template_name = "product-detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(ItemDetailView, self).get_context_data(**kwargs)
+
+        return context
+
+
 
 
 # class CategoryView(DetailView):
@@ -143,7 +150,7 @@ class ItemDetailView(DetailView):
 class CategoryView(View):
     def get(self, *args, **kwargs):
         category = Category.objects.get(slug=self.kwargs['slug'])
-        item = Item.objects.filter(category=category, is_active=True)
+        item = ItemStock.objects.filter(category=category, is_active=True)
         context = {
             'object_list': item,
             'category_title': category,
@@ -234,7 +241,7 @@ class CheckoutView(View):
 
 @login_required
 def add_to_cart(request, slug):
-    item = get_object_or_404(Item, slug=slug)
+    item = get_object_or_404(ItemStock, slug=slug)
     order_item, created = OrderItem.objects.get_or_create(
         item=item,
         user=request.user,
@@ -263,7 +270,7 @@ def add_to_cart(request, slug):
 
 @login_required
 def remove_from_cart(request, slug):
-    item = get_object_or_404(Item, slug=slug)
+    item = get_object_or_404(ItemStock, slug=slug)
     order_qs = Order.objects.filter(
         user=request.user,
         ordered=False)
@@ -292,7 +299,7 @@ def remove_from_cart(request, slug):
 
 @login_required
 def remove_single_item_from_cart(request, slug):
-    item = get_object_or_404(Item, slug=slug)
+    item = get_object_or_404(ItemStock, slug=slug)
     order_qs = Order.objects.filter(
         user=request.user,
         ordered=False)

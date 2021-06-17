@@ -50,8 +50,19 @@ class Category(models.Model):
             'slug': self.slug
         })
 
+class Product(models.Model):
+    title = models.CharField(max_length=100,default="")
+    label = models.CharField(choices=LABEL_CHOICES, max_length=1,default="")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
+    slug = models.SlugField(default="")
+    description_short = models.CharField(max_length=50,default="")
+    description_long = models.TextField(default="")
+    image = models.ImageField(default="")
+    def __str__(self):
+        return "Produto " + self.title
 
-class Item(models.Model):
+class ItemStock(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.PROTECT,related_name="product_stock", blank=True, null=True)
     title = models.CharField(max_length=100)
     price = models.FloatField()
     discount_price = models.FloatField(blank=True, null=True)
@@ -82,12 +93,19 @@ class Item(models.Model):
             'slug': self.slug
         })
 
+class Gallery(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name="product_gallery",blank=True, null=True)
+    alt = models.CharField(max_length=50)
+    image = models.ImageField()
+
+    def __str__(self):
+        return self.alt
 
 class OrderItem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     ordered = models.BooleanField(default=False)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    item = models.ForeignKey(ItemStock, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
 
     def __str__(self):

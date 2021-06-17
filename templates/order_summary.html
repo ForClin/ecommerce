@@ -21,14 +21,14 @@
           <tr>
             <th scope="row">{{ forloop.counter }}</th>
             <td>
-			<img src="{{ order_item.item.image.url }}" style="width: 130px;"> 
+			<img src="{{ order_item.item.product.image.url }}" style="width: 130px;">
             </td>
-            <td>{{ order_item.item.title }}</td>
-            <td>{{ order_item.item.price }}</td>
+            <td>{{ order_item.item.product.title }}</td>
+            <td>{{ order_item.item.product.price }}</td>
             <td>
-            	<a href="{% url 'core:remove-single-item-from-cart' order_item.item.slug %}"><i class="fas fa-minus mr-3"></i></a>
+            	<a href="{% url 'core:remove-single-item-from-cart' order_item.item.product.slug %}"><i class="fas fa-minus mr-3"></i></a>
             	{{ order_item.quantity }}
-            	<a href="{% url 'core:add-to-cart' order_item.item.slug %}"><i class="fas fa-plus ml-3"></i></a>
+            	<a href="{% url 'core:add-to-cart' order_item.item.product.slug %}"><i class="fas fa-plus ml-3"></i></a>
             </td>
             <td>
               {% if order_item.item.discount_price %}
@@ -37,7 +37,7 @@
               {% else %}
                   ${{ order_item.get_total_item_price}}
               {% endif %}
-              <a style="color: red" href="{% url 'core:remove-from-cart' order_item.item.slug %}">
+              <a style="color: red" href="{% url 'core:remove-from-cart' order_item.item.product.slug %}">
               	<i class="fas fa-trash float-right"></i>
               </a>
             </td>

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Item, OrderItem, Order, Payment, Coupon, Refund, BillingAddress, Category, Slide
+from .models import ItemStock, OrderItem, Order, Payment, Coupon, Refund, BillingAddress, Category, Slide, Gallery, Product
 
 
 # Register your models here.
@@ -78,6 +78,16 @@ class ItemAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
     actions = [copy_items]
 
+class ProductAdmin(admin.ModelAdmin):
+    list_display = [
+        'title',
+        'category',
+    ]
+    list_filter = ['title', 'category']
+    search_fields = ['title', 'category']
+    prepopulated_fields = {"slug": ("title",)}
+    actions = [copy_items]
+
 class CategoryAdmin(admin.ModelAdmin):
     list_display = [
         'title',
@@ -87,8 +97,16 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ['title', 'is_active']
     prepopulated_fields = {"slug": ("title",)}
 
+class GalleryAdmin(admin.ModelAdmin):
+    list_display = [
+        'alt',
+    ]
+    list_filter = ['alt']
+    search_fields = ['alt']
+    actions = [copy_items]
 
-admin.site.register(Item, ItemAdmin)
+admin.site.register(Product, ProductAdmin)
+admin.site.register(ItemStock, ItemAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Slide)
 admin.site.register(OrderItem)
@@ -97,3 +115,4 @@ admin.site.register(Payment)
 admin.site.register(Coupon)
 admin.site.register(Refund)
 admin.site.register(BillingAddress, AddressAdmin)
+admin.site.register(Gallery, GalleryAdmin)
